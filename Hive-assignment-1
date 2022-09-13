@@ -1,0 +1,445 @@
+STEP-1:
+#Storing raw data in hdfs location
+[cloudera@quickstart assignment]$ hadoop fs -put order_data.csv /
+[cloudera@quickstart assignment]$ hadoop fs -ls /
+Found 11 items
+drwxrwxrwx   - hdfs     supergroup          0 2017-10-23 09:15 /benchmarks
+drwxr-xr-x   - cloudera supergroup          0 2022-09-06 12:24 /data_structures
+drwxr-xr-x   - hbase    supergroup          0 2022-09-13 10:55 /hbase
+drwxr-xr-x   - cloudera supergroup          0 2022-09-06 11:39 /kaggle
+-rw-r--r--   1 cloudera supergroup     360233 2022-09-13 11:19 /order_data.csv
+drwxr-xr-x   - solr     solr                0 2017-10-23 09:18 /solr
+drwxr-xr-x   - cloudera supergroup          0 2022-09-04 08:31 /test
+-rw-r--r--   1 root     supergroup         48 2022-08-30 11:56 /test_1.txt
+drwxrwxrwt   - hdfs     supergroup          0 2022-08-20 00:13 /tmp
+drwxr-xr-x   - hdfs     supergroup          0 2017-10-23 09:17 /user
+drwxr-xr-x   - hdfs     supergroup          0 2017-10-23 09:17 /var
+[cloudera@quickstart assignment]$
+
+STEP-2:
+#Creating an internal table 
+hive> create table sales_order_csv
+    > (
+    > ORDERNUMBER int,
+    > QUANTITYORDERED int,
+    > PRICEEACH float,
+    > ORDERLINENUMBER int,
+    > SALES float,
+    > STATUS string,
+    > QTR_ID int,
+    > MONTH_ID int,
+    > YEAR_ID int,
+    > PRODUCTLINE string,
+    > MSRP int,
+    > PRODUCTCODE string,
+    > PHONE string,
+    > CITY string,
+    > STATE string,
+    > POSTALCODE string,
+    > COUNTRY string,
+    > TERRITORY string,
+    > CONTACTLASTNAME string,
+    > CONTACTFIRSTNAME string,
+    > DEALSIZE string
+    > )
+    > row format delimited
+    > fields terminated by ','
+    > tblproperties('skip.header.line.count'='1')
+    > ;
+OK
+Time taken: 0.101 seconds
+
+STEP-3:
+#Creating orc table 
+hive> create table sales_order_orc
+    > (
+    > ORDERNUMBER int,
+    > QUANTITYORDERED int,
+    > PRICEEACH float,
+    > ORDERLINENUMBER int,
+    > SALES float,
+    > STATUS string,
+    > QTR_ID int,
+    > MONTH_ID int,
+    > YEAR_ID int,
+    > PRODUCTLINE string,
+    > MSRP int,
+    > PRODUCTCODE string,
+    > PHONE string,
+    > CITY string,
+    > STATE string,
+    > POSTALCODE string,
+    > COUNTRY string,
+    > TERRITORY string,
+    > CONTACTLASTNAME string,
+    > CONTACTFIRSTNAME string,
+    > DEALSIZE string
+    > )
+    > stored as orc;
+OK
+Time taken: 0.748 seconds
+hive>
+
+STEP-4:
+#Loading data into orc table from csv tablw
+hive> from sales_order_csv insert overwrite table sales_order_orc select *;
+Query ID = cloudera_20220913115656_db7fe11e-f2a8-4b68-97f2-d364bba1d1af
+Total jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks is set to 0 since there's no reduce operator
+Starting Job = job_1663091730585_0002, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1663091730585_0002/
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1663091730585_0002
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 0
+2022-09-13 11:57:18,303 Stage-1 map = 0%,  reduce = 0%
+2022-09-13 11:57:34,897 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 3.24 sec
+MapReduce Total cumulative CPU time: 3 seconds 240 msec
+Ended Job = job_1663091730585_0002
+Stage-4 is selected by condition resolver.
+Stage-3 is filtered out by condition resolver.
+Stage-5 is filtered out by condition resolver.
+Moving data to: hdfs://quickstart.cloudera:8020/user/hive/warehouse/my_first_hive_db.db/sales_order_orc/.hive-staging_hive_2022-09-13_11-56-32_691_6932553640413038403-1/-ext-10000
+Loading data to table my_first_hive_db.sales_order_orc
+Table my_first_hive_db.sales_order_orc stats: [numFiles=1, numRows=2823, totalSize=37548, rawDataSize=3153291]
+MapReduce Jobs Launched:
+Stage-Stage-1: Map: 1   Cumulative CPU: 3.24 sec   HDFS Read: 367358 HDFS Write: 37643 SUCCESS
+Total MapReduce CPU Time Spent: 3 seconds 240 msec
+OK
+sales_order_csv.ordernumber     sales_order_csv.quantityordered sales_order_csv.priceeach       sales_order_csv.orderlinenumber sales_order_csv.sales   sales_order_csv.status  sales_order_csv.qtr_id  sales_order_csv.month_id        sales_order_csv.year_id      sales_order_csv.productline     sales_order_csv.msrp    sales_order_csv.productcode     sales_order_csv.phone   sales_order_csv.city    sales_order_csv.state   sales_order_csv.postalcode      sales_order_csv.country      sales_order_csv.territory       sales_order_csv.contactlastname sales_order_csv.contactfirstname        sales_order_csv.dealsize
+Time taken: 65.932 seconds
+hive> select * from sales_order_orc limit 5;
+OK
+sales_order_orc.ordernumber     sales_order_orc.quantityordered sales_order_orc.priceeach       sales_order_orc.orderlinenumber sales_order_orc.sales   sales_order_orc.status  sales_order_orc.qtr_id  sales_order_orc.month_id        sales_order_orc.year_id      sales_order_orc.productline     sales_order_orc.msrp    sales_order_orc.productcode     sales_order_orc.phone   sales_order_orc.city    sales_order_orc.state   sales_order_orc.postalcode      sales_order_orc.country      sales_order_orc.territory       sales_order_orc.contactlastname sales_order_orc.contactfirstname        sales_order_orc.dealsize
+10107   30      95.7    2       2871.0  Shipped 1       2       2003    Motorcycles     95      S10_1678        2125557818      NYC     NY      10022   USA     NA      Yu      Kwai    Small
+10121   34      81.35   5       2765.9  Shipped 2       5       2003    Motorcycles     95      S10_1678        26.47.1555      Reims           51100   France  EMEA    Henriot Paul    Small
+10134   41      94.74   2       3884.34 Shipped 3       7       2003    Motorcycles     95      S10_1678        +33 1 46 62 7555        Paris           75508   France  EMEA    Da Cunha        Daniel  Medium
+10145   45      83.26   6       3746.7  Shipped 3       8       2003    Motorcycles     95      S10_1678        6265557265      Pasadena        CA      90003   USA     NA      Young   Julie   Medium
+10159   49      100.0   14      5205.27 Shipped 4       10      2003    Motorcycles     95      S10_1678        6505551386      San Francisco   CA              USA     NA      Brown   Julie   Medium
+Time taken: 0.245 seconds, Fetched: 5 row(s)
+hive>
+
+
+
+
+a. Calculatye total sales per year
+hive> select year_id,sum(sales) from sales_order_orc group by year_id order by year_id;
+year_id _c1
+2003    3516979.547241211
+2004    4724162.593383789
+2005    1791486.7086791992
+b. Find a product for which maximum orders were placed
+hive> select max(QUANTITYORDERED) from sales_order_orc;
+Query ID = cloudera_20220913122222_d2c7df13-2f61-47b9-91dd-e1d144c24c23
+Total jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks determined at compile time: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1663091730585_0006, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1663091730585_0006/
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1663091730585_0006
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 1
+2022-09-13 12:22:33,576 Stage-1 map = 0%,  reduce = 0%
+2022-09-13 12:22:49,835 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.92 sec
+2022-09-13 12:23:10,826 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 3.99 sec
+MapReduce Total cumulative CPU time: 3 seconds 990 msec
+Ended Job = job_1663091730585_0006
+MapReduce Jobs Launched:
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 3.99 sec   HDFS Read: 28776 HDFS Write: 3 SUCCESS
+Total MapReduce CPU Time Spent: 3 seconds 990 msec
+OK
+_c0
+97
+Time taken: 48.721 seconds, Fetched: 1 row(s)
+hive> select productline from sales_order_orc where QUANTITYORDERED=97;
+OK
+productline
+Classic Cars
+Time taken: 0.208 seconds, Fetched: 1 row(s)
+hive>
+
+c. Calculate the total sales for each quarter
+hive> select year_id,qtr_id,sum(sales) as total_sales from sales_order_orc group by year_id,qtr_id;
+year_id qtr_id  total_sales
+2003    1       445094.6897583008
+2003    2       562365.2218017578
+2003    3       649514.5415039062
+2003    4       1860005.094177246
+2004    1       833730.6786499023
+2004    2       766260.7305297852
+2004    3       1109396.2674560547
+2004    4       2014774.9167480469
+2005    1       1071992.3580932617
+2005    2       719494.3505859375
+Time taken: 37.974 seconds, Fetched: 10 row(s)
+hive>
+
+d. In which quarter sales was minimum
+select year_id,qtr_id from sales_order_orc where sales_order_orc.sales in ( select min(sales) from sales_order_orc);
+year_id qtr_id
+2005    2
+Time taken: 76.83 seconds, Fetched: 1 row(s)
+hive>
+
+e. In which country sales was maximum and in which country sales was minimum
+hive> select country as country_with_max_sales from sales_order_orc where sales_order_orc.sales in (select max(sales) from sales_order_orc);
+
+country_with_max_sales
+USA
+Time taken: 98.82 seconds, Fetched: 1 row(s)
+hive>
+
+hive> select country as country_with_min_sales from sales_order_orc where sales_order_orc.sales in (select min(sales) from sales_order_orc);
+
+country_with_min_sales
+France
+
+f. Calculate quartelry sales for each city
+hive> select year_id,qtr_id,city,sum(sales) as quaterly_sales from sales_order_orc group by year_id,qtr_id,city order by year_id,qtr_id,city;
+
+year_id qtr_id  city    quaterly_sales
+2003    1       Bergamo 56181.320068359375
+2003    1       Frankfurt       11432.33984375
+2003    1       Kobenhavn       58871.110107421875
+2003    1       Lule    9748.999755859375
+2003    1       Madrid  44621.96008300781
+2003    1       Makati City     55245.02014160156
+2003    1       Manchester      51017.919860839844
+2003    1       NYC     32647.809814453125
+2003    1       Nashua  12133.25
+2003    1       Philadelphia    27398.820434570312
+2003    1       San Francisco   18695.579833984375
+2003    1       San Rafael      12398.56005859375
+2003    1       Stavern 54701.999755859375
+2003    2       Barcelona       4219.2001953125
+2003    2       Brickhaven      7277.35009765625
+2003    2       Charleroi       1711.260009765625
+2003    2       Glendale        20350.949768066406
+2003    2       Las Vegas       33847.61975097656
+2003    2       London  32376.29052734375
+2003    2       Madrid  100689.03051757812
+2003    2       Marseille       52481.840087890625
+2003    2       Melbourne       60135.84033203125
+2003    2       NYC     93239.56018066406
+2003    2       Nantes  16560.300048828125
+2003    2       Paris   38217.41046142578
+2003    2       Reims   18971.959716796875
+2003    2       Salzburg        38629.14001464844
+2003    2       Singapore       43657.47009277344
+2003    3       Brickhaven      34992.39978027344
+2003    3       Brisbane        34100.030029296875
+2003    3       Burlingame      42031.83020019531
+2003    3       Charleroi       1637.199951171875
+2003    3       Chatswood       28397.259521484375
+2003    3       Espoo   31569.430053710938
+2003    3       Glendale        7600.1201171875
+2003    3       Madrid  47727.82019042969
+2003    3       New Bedford     45738.38952636719
+2003    3       North Sydney    47191.76013183594
+2003    3       Oulu    37501.580322265625
+2003    3       Paris   25624.880004882812
+2003    3       Pasadena        55776.119873046875
+2003    3       Reims   15146.31982421875
+2003    3       San Rafael      122368.67102050781
+2003    3       Singapore       44219.36022949219
+2003    3       South Brisbane  10640.290161132812
+2003    3       Toulouse        17251.08056640625
+2003    4       Aaarhus 40321.60998535156
+2003    4       Barcelona       44009.30993652344
+2003    4       Bergamo 40077.71026611328
+2003    4       Bergen  95277.17993164062
+2003    4       Boras   48710.92053222656
+2003    4       Boston  63730.7802734375
+2003    4       Bridgewater     26115.800537109375
+2003    4       Burbank 8234.559936523438
+2003    4       Burlingame      62305.47009277344
+2003    4       Frankfurt       27257.790283203125
+2003    4       Glen Waverly    37878.54992675781
+2003    4       Glendale        5142.14990234375
+2003    4       Graz    43488.740234375
+2003    4       Helsinki        42083.499755859375
+2003    4       Koln    31363.1796875
+2003    4       Lille   48874.28088378906
+2003    4       Liverpool       26797.210083007812
+2003    4       London  70230.12927246094
+2003    4       Los Angeles     24159.14013671875
+2003    4       Lyon    41535.11022949219
+2003    4       Madrid  112573.33026123047
+2003    4       Makati City     22841.960083007812
+2003    4       Montreal        15947.290405273438
+2003    4       NYC     89600.84008789062
+2003    4       Nashua  63981.449768066406
+2003    4       New Bedford     64053.130615234375
+2003    4       New Haven       42498.760498046875
+2003    4       North Sydney    41791.949462890625
+2003    4       Oslo    45078.759765625
+2003    4       Pasadena        4512.47998046875
+2003    4       Philadelphia    40061.66003417969
+2003    4       Reggio Emilia   44669.740478515625
+2003    4       San Francisco   121110.76025390625
+2003    4       San Rafael      50360.88977050781
+2003    4       Sevilla 51502.74108886719
+2003    4       Singapore       77809.37023925781
+2003    4       South Brisbane  27098.800048828125
+2003    4       Stavern 1474.6600341796875
+2003    4       Toulouse        38098.240234375
+2003    4       Vancouver       38662.209716796875
+2003    4       White Plains    38682.949462890625
+2004    1       Brisbane        16118.479858398438
+2004    1       Bruxelles       18800.089721679688
+2004    1       Burbank 37850.07958984375
+2004    1       Cambridge       21782.699951171875
+2004    1       Cowes   26906.68017578125
+2004    1       Dublin  38784.470458984375
+2004    1       Frankfurt       37266.48937988281
+2004    1       Gensve  50432.549560546875
+2004    1       Lille   20178.1298828125
+2004    1       London  8477.219970703125
+2004    1       Los Angeles     23889.320068359375
+2004    1       Lyon    101339.13977050781
+2004    1       Madrid  105491.33990478516
+2004    1       Melbourne       49637.57067871094
+2004    1       Newark  8722.1201171875
+2004    1       Osaka   50490.64013671875
+2004    1       Paris   51172.649658203125
+2004    1       San Diego       87489.23010253906
+2004    1       San Rafael      48922.76989746094
+2004    1       Singapore       24219.58984375
+2004    1       Versailles      5759.419921875
+2004    2       Boston  26677.350219726562
+2004    2       Bridgewater     44130.52062988281
+2004    2       Cambridge       14380.920043945312
+2004    2       Espoo   31018.230102539062
+2004    2       Kobenhavn       36079.010009765625
+2004    2       Liverpool       50408.25
+2004    2       Madrid  119656.04028320312
+2004    2       Minato-ku       25928.750244140625
+2004    2       Montreal        24564.530029296875
+2004    2       NYC     71860.779296875
+2004    2       New Haven       36973.309814453125
+2004    2       Newark  27987.069580078125
+2004    2       Osaka   17114.43017578125
+2004    2       Oulu    17813.40008544922
+2004    2       Paris   27931.210083007812
+2004    2       Philadelphia    7287.240234375
+2004    2       San Jose        64600.33984375
+2004    2       Singapore       45788.72009277344
+2004    2       Strasbourg      44758.12951660156
+2004    2       Tsawassen       31302.500244140625
+2004    3       Allentown       71930.61041259766
+2004    3       Bergen  16363.099975585938
+2004    3       Boras   53941.68981933594
+2004    3       Boston  15344.640014648438
+2004    3       Brickhaven      79982.13989257812
+2004    3       Bruxelles       47760.479736328125
+2004    3       Cambridge       48828.71942138672
+2004    3       Chatswood       41297.14050292969
+2004    3       Dublin  18971.959838867188
+2004    3       Gensve  67281.00903320312
+2004    3       Glen Waverly    12334.819580078125
+2004    3       Helsinki        42744.0595703125
+2004    3       Las Vegas       34453.84973144531
+2004    3       Madrid  21986.269897460938
+2004    3       Munich  34993.92004394531
+2004    3       NYC     63027.92004394531
+2004    3       Nantes  61310.880126953125
+2004    3       Oslo    34145.47021484375
+2004    3       Paris   2173.60009765625
+2004    3       Reggio Emilia   56421.650390625
+2004    3       Salzburg        6693.2802734375
+2004    3       San Rafael      93928.72961425781
+2004    3       Singapore       46030.7197265625
+2004    3       Torino  94117.25988769531
+2004    3       Tsawassen       43332.349609375
+2004    4       Aaarhus 60273.93981933594
+2004    4       Allentown       44040.729736328125
+2004    4       Barcelona       30183.35009765625
+2004    4       Bergamo 41696.68981933594
+2004    4       Brickhaven      11528.52978515625
+2004    4       Burlingame      2916.199951171875
+2004    4       Cambridge       54251.659912109375
+2004    4       Charleroi       13463.480224609375
+2004    4       Chatswood       37905.14990234375
+2004    4       Cowes   51334.15966796875
+2004    4       Frankfurt       9214.969970703125
+2004    4       Glendale        29343.349975585938
+2004    4       Kobenhavn       24078.610107421875
+2004    4       Koln    68943.40051269531
+2004    4       Las Vegas       14449.609741210938
+2004    4       London  13739.900024414062
+2004    4       Lule    66005.8798828125
+2004    4       Madrid  203007.4793701172
+2004    4       Makati City     15928.750244140625
+2004    4       Manchester      106789.88977050781
+2004    4       Marseille       20136.859985351562
+2004    4       Melbourne       91221.99914550781
+2004    4       Minato-ku       55888.65026855469
+2004    4       NYC     210410.85986328125
+2004    4       Nantes  23031.589599609375
+2004    4       Nashua  55570.59973144531
+2004    4       New Bedford     49504.379150390625
+2004    4       Paris   89436.60034179688
+2004    4       Philadelphia    76441.41040039062
+2004    4       Reims   48895.59014892578
+2004    4       Salzburg        45001.10986328125
+2004    4       San Francisco   30348.720336914062
+2004    4       San Rafael      113622.75903320312
+2004    4       Sevilla 3220.8800659179688
+2004    4       Stavern 60422.530029296875
+2004    4       Vancouver       36576.70983886719
+2004    4       Versailles      59074.90026855469
+2004    4       White Plains    46873.04016113281
+2005    1       Boras   31606.72021484375
+2005    1       Brickhaven      31474.7802734375
+2005    1       Burlingame      13529.570190429688
+2005    1       Charleroi       16628.16015625
+2005    1       Espoo   51373.49072265625
+2005    1       Glendale        3987.199951171875
+2005    1       Graz    8775.159912109375
+2005    1       Helsinki        26422.819458007812
+2005    1       Madrid  207555.18994140625
+2005    1       Marseille       2317.43994140625
+2005    1       Minato-ku       38191.38977050781
+2005    1       Nantes  59617.39978027344
+2005    1       New Bedford     48578.95935058594
+2005    1       North Sydney    65012.41955566406
+2005    1       Oulu    49055.40026855469
+2005    1       Paris   20321.52978515625
+2005    1       Pasadena        44273.359436035156
+2005    1       Reims   52029.07043457031
+2005    1       San Francisco   54203.6201171875
+2005    1       San Rafael      205993.9287109375
+2005    1       Singapore       4175.60009765625
+2005    1       South Brisbane  21730.029907226562
+2005    1       Toulouse        15139.1201171875
+2005    2       Allentown       6166.7998046875
+2005    2       Boston  48316.89001464844
+2005    2       Bridgewater     31648.469970703125
+2005    2       Bruxelles       8411.949829101562
+2005    2       Chatswood       43971.429931640625
+2005    2       Glen Waverly    14378.089965820312
+2005    2       Kobenhavn       26012.87060546875
+2005    2       Liverpool       40802.8095703125
+2005    2       Madrid  119242.98052978516
+2005    2       Minato-ku       553.9500122070312
+2005    2       Montreal        33692.97009277344
+2005    2       Nantes  43784.69012451172
+2005    2       Newark  46518.99951171875
+2005    2       Paris   14066.7998046875
+2005    2       Reggio Emilia   41509.94006347656
+2005    2       Salzburg        59475.100036621094
+2005    2       San Jose        95409.93041992188
+2005    2       San Rafael      7261.75
+2005    2       Singapore       2587.5799560546875
+2005    2       Strasbourg      35680.350341796875
+
+
+h. Find a month for each year in which maximum number of quantities were sold
+
+hive> select year_id,month_id from sales_order_orc where sales_order_orc.QUANTITYORDERED in (select max(QUANTITYORDERED) from sales_order_orc) group by year_id,month_id;
+
+
+year_id month_id
+2005    4
