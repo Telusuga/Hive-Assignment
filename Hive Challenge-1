@@ -1,0 +1,23 @@
+Will the reducer work or not if you use “Limit 1” in any HiveQL query?
+
+Answer:
+
+
+
+Suppose I have installed Apache Hive on top of my Hadoop cluster using default metastore configuration. Then, what will happen if we have multiple clients trying to access Hive at the same time? 
+
+Answer: Apache Hive runs on Derby Db which acts as Metastore for Hive. The only disadvantage for Derby DB it doesnot have feature to handle multiple clients at once only a single client per session is allowed. If multiple clients try to work on Derby DB they will be in wait state.
+
+
+Suppose, I create a table that contains details of all the transactions done by the customers: CREATE TABLE transaction_details (cust_id INT, amount FLOAT, month STRING, country STRING) ROW FORMAT DELIMITED FIELDS TERMINATED BY ‘,’ ;
+Now, after inserting 50,000 records in this table, I want to know the total revenue generated for each month. But, Hive is taking too much time in processing this query. How will you solve this problem and list the steps that I will be taking in order to do so?
+
+Answer:As the data is so huge so inorder to search linearly we can partition the data based on column which is frequently used and on top of partitioning we can perform clustering by defining a column in which a specfic function segregates the data for faster querying and finally we can create a table with the format ORC or parquet for better compression and querying.
+
+
+How can you add a new partition for the month December in the above partitioned table?
+
+Answer:
+CREATE TABLE transaction_details (cust_id INT, amount FLOAT, month STRING, country STRING) ROW FORMAT DELIMITED FIELDS TERMINATED BY ‘,’  PARTITIONED BY (month string);
+
+insert overwrite table transaction_details partition(month='December') select cust_id,amount,month,country from transaction_details where month='December';
