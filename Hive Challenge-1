@@ -1,6 +1,6 @@
 Will the reducer work or not if you use “Limit 1” in any HiveQL query?
 
-Answer:
+Answer:No the reduces will not work as we are not aggregating or grouping any of the results from mapper.
 
 
 
@@ -21,3 +21,44 @@ Answer:
 CREATE TABLE transaction_details (cust_id INT, amount FLOAT, month STRING, country STRING) ROW FORMAT DELIMITED FIELDS TERMINATED BY ‘,’  PARTITIONED BY (month string);
 
 insert overwrite table transaction_details partition(month='December') select cust_id,amount,month,country from transaction_details where month='December';
+
+
+I am inserting data into a table based on partitions dynamically. But, I received an error – FAILED ERROR IN SEMANTIC ANALYSIS: Dynamic partition strict mode requires at least one static partition column. How will you remove this error?
+
+Answer:
+This error is due to the property hive.mapred.mode=true which is for static partition has the above clearly states about using dynamic partition so in order to avoid the problem we need to set the property hive.exec.dynamic.partition.mode=nonstrict; then the error will not come.
+
+Suppose, I have a CSV file – ‘sample.csv’ present in ‘/temp’ directory with the following entries:
+id first_name last_name email gender ip_address
+How will you consume this CSV file into the Hive warehouse using built-in SerDe?
+
+Answer:
+First while crreating the table we should use the library for the CSVSerDe
+Library-->org.apache.hadoop.hive.serde2.OpenCSVSerde
+and we need to see a sample data and we need to create custom properties for the data like separatorcharacters,quotecharacters,escapecharacters like
+with SerdeProperties(
+'SeparatorChar'=','
+)
+
+
+Suppose, I have a lot of small CSV files present in the input directory in HDFS and I want to create a single Hive table corresponding to these files. The data in these files are in the format: {id, name, e-mail, country}. Now, as we know, Hadoop performance degrades when we use lots of small files.
+So, how will you solve this problem where we want to create a single Hive table for lots of small files without degrading the performance of the system?
+
+Answer:
+First we need to move all the corresponding files to the into a single directory and we need to mention only the directory while loading data into table.
+load data local inpath 'file:///directory/' into table <destination_tablle>
+Since the table is created on top of multiple files so the data is in multiple files.
+The number of mappers will also increase as there are multiple files and based on mappers there will be reducers based on the data and query.
+
+
+LOAD DATA LOCAL INPATH ‘Home/country/state/’
+OVERWRITE INTO TABLE address;
+
+The following statement failed to execute. What can be the cause?
+
+Answer:There might be 2 reasons for the failed execution.
+1st:The file data file may not be present at the given location.
+2nd:The schema might not be matched with the input data.
+3rd:The delimiters mentioned might be incorrect.
+
+
