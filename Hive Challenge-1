@@ -61,4 +61,69 @@ Answer:There might be 2 reasons for the failed execution.
 2nd:The schema might not be matched with the input data.
 3rd:The delimiters mentioned might be incorrect.
 
+Hive Join operations
+
+Create a  table named CUSTOMERS(ID | NAME | AGE | ADDRESS   | SALARY)
+Create a Second  table ORDER(OID | DATE | CUSTOMER_ID | AMOUNT
+)
+Answer:
+hive> select * from customers;
+OK
+customers.id    customers.name  customers.age   customers.address       customers.salary
+1       Surya   23      Guntur  3.36
+2       Deepak  23      Bangalore       3.39
+3       Nani    24      Chennai 4.12
+4       Aravind 24      Hyderabad       5.64
+5       Kenny   25      Mumbai  6.52
+6       Hemanth 26      Delhi   7.12
+NULL    NULL    NULL    NULL    NULL
+Time taken: 0.49 seconds, Fetched: 7 row(s)
+hive> select * from order;
+OK
+order.id        order.date      order.customer_id       order.amount
+1       2022-09-26      1783    50
+2       2021-01-08      1793    100
+3       2024-07-23      1823    501
+6       2009-10-19      1943    654
+Time taken: 0.156 seconds, Fetched: 4 row(s)
+hive>
+
+
+hive> select * from customers c inner join order o on c.id=o.id;
+Hadoop job information for Stage-1: number of mappers: 2; number of reducers: 1
+c.id    c.name  c.age   c.address       c.salary        o.id    o.date  o.customer_id   o.amount
+1       Surya   23      Guntur  3.36    1       2022-09-26      1783    50
+2       Deepak  23      Bangalore       3.39    2       2021-01-08      1793    100
+3       Nani    24      Chennai 4.12    3       2024-07-23      1823    501
+6       Hemanth 26      Delhi   7.12    6       2009-10-19      1943    654
+
+hive> select * from customers c left outer join order o on c.id=o.id;
+Hadoop job information for Stage-1: number of mappers: 2; number of reducers: 1
+c.id    c.name  c.age   c.address       c.salary        o.id    o.date  o.customer_id   o.amount
+NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL
+1       Surya   23      Guntur  3.36    1       2022-09-26      1783    50
+2       Deepak  23      Bangalore       3.39    2       2021-01-08      1793    100
+3       Nani    24      Chennai 4.12    3       2024-07-23      1823    501
+4       Aravind 24      Hyderabad       5.64    NULL    NULL    NULL    NULL
+5       Kenny   25      Mumbai  6.52    NULL    NULL    NULL    NULL
+6       Hemanth 26      Delhi   7.12    6       2009-10-19      1943    654
+
+
+hive> select * from customers c right outer join order o on c.id=o.id;
+c.id    c.name  c.age   c.address       c.salary        o.id    o.date  o.customer_id   o.amount
+1       Surya   23      Guntur  3.36    1       2022-09-26      1783    50
+2       Deepak  23      Bangalore       3.39    2       2021-01-08      1793    100
+3       Nani    24      Chennai 4.12    3       2024-07-23      1823    501
+6       Hemanth 26      Delhi   7.12    6       2009-10-19      1943    654
+
+
+hive> select * from customers c full outer join order o on c.id=o.id;
+c.id    c.name  c.age   c.address       c.salary        o.id    o.date  o.customer_id   o.amount
+NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL
+1       Surya   23      Guntur  3.36    1       2022-09-26      1783    50
+2       Deepak  23      Bangalore       3.39    2       2021-01-08      1793    100
+3       Nani    24      Chennai 4.12    3       2024-07-23      1823    501
+4       Aravind 24      Hyderabad       5.64    NULL    NULL    NULL    NULL
+5       Kenny   25      Mumbai  6.52    NULL    NULL    NULL    NULL
+6       Hemanth 26      Delhi   7.12    6       2009-10-19      1943    654
 
