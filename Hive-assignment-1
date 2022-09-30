@@ -438,8 +438,15 @@ year_id qtr_id  city    quaterly_sales
 
 h. Find a month for each year in which maximum number of quantities were sold
 
-hive> select year_id,month_id from sales_order_orc where sales_order_orc.QUANTITYORDERED in (select max(QUANTITYORDERED) from sales_order_orc) group by year_id,month_id;
+hive> select o.year_id,o.month_id,o.quantityordered from
+    > (
+    > select s.*,row_number() over(partition by year_id order by quantityordered desc,sales desc) as quantity from sales_order_orc s
+    > ) o
+    > where o.quantity=1;
 
 
-year_id month_id
-2005    4
+o.year_id       o.month_id      o.quantityordered
+2003    5       50
+2004    11      55
+2005    4       97
+
