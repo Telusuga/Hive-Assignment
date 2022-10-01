@@ -127,34 +127,7 @@ year_id _c1
 2004    4724162.593383789
 2005    1791486.7086791992
 b. Find a product for which maximum orders were placed
-hive> select max(QUANTITYORDERED) from sales_order_orc;
-Query ID = cloudera_20220913122222_d2c7df13-2f61-47b9-91dd-e1d144c24c23
-Total jobs = 1
-Launching Job 1 out of 1
-Number of reduce tasks determined at compile time: 1
-In order to change the average load for a reducer (in bytes):
-  set hive.exec.reducers.bytes.per.reducer=<number>
-In order to limit the maximum number of reducers:
-  set hive.exec.reducers.max=<number>
-In order to set a constant number of reducers:
-  set mapreduce.job.reduces=<number>
-Starting Job = job_1663091730585_0006, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1663091730585_0006/
-Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1663091730585_0006
-Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 1
-2022-09-13 12:22:33,576 Stage-1 map = 0%,  reduce = 0%
-2022-09-13 12:22:49,835 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.92 sec
-2022-09-13 12:23:10,826 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 3.99 sec
-MapReduce Total cumulative CPU time: 3 seconds 990 msec
-Ended Job = job_1663091730585_0006
-MapReduce Jobs Launched:
-Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 3.99 sec   HDFS Read: 28776 HDFS Write: 3 SUCCESS
-Total MapReduce CPU Time Spent: 3 seconds 990 msec
-OK
-_c0
-97
-Time taken: 48.721 seconds, Fetched: 1 row(s)
-hive> select productline from sales_order_orc where QUANTITYORDERED=97;
-OK
+hive> select productline from sales_order_orc where sales_order_orc.QUANTITYORDERED in (select max(QUANTITYORDERED) from sales_order_orc);
 productline
 Classic Cars
 Time taken: 0.208 seconds, Fetched: 1 row(s)
