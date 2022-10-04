@@ -1,0 +1,37 @@
+1)What is the definition of Hive? What is the present version of Hive? 
+Answer:Hive is a computation engine in which it runs on top of MAP REDUCE Program.In order to write a Map Reduce code is written in JAVA in order to reduce the overhead of writing multiple lines of code.
+Instead of writing code in MAP REDUCE we can use Hive Query Language(HQL) in order to get the results.
+Version--->Hive 1.1.0-cdh5.13.0
+Present hive version-->3.1.3
+
+2)Is Hive suitable to be used for OLTP systems? Why?
+Answer:Hive basically supports OLAP because it has the capability to do the analysis on top of huge amount of data.
+Hive is very much suitable for batch processing and it doesnot support inserts and updates at row level.
+But in the later versions of hive it also supports the updates after 0.14.
+
+3)How is HIVE different from RDBMS? Does hive support ACID transactions. If not then give the proper reason
+Answer:In general RDBMS we perform general SQL operations on a database but in Hive the operations are performed on Data warehouse.
+One of the main difference is Hive is "Schema On Read" where as general RDBMS is "Schema On Write". Hive does support ACID properties.
+For a table to perform ACID properties it must follow 4 steps:
+(a) It must be a Internal/Managed Table.
+(b) It should be bucketed/clustered.
+(c) The table format must be in ORC.
+(d) The transactional Property should be set to true.
+Note: The ACID properties came into hive starting from Version 0.14.
+
+4)Explain the hive architecture and the different components of a Hive architecture?
+Answer:The main components of Hive are 
+a)Driver: This is the main part in Hive in which it contains 4 main blocks:
+                                                      1)Parser:This is used to check the syntax and schemantics.
+                                                      2)Planner:This is used to put out the various execution plans.
+                                                      3)Optimizer:This is used to select the best execution plan in which is low in terms of cost and faster in execution.
+                                                      4)Executioner:This is used to execute the output plan of the optimizer. The execution is mainly done by Map-Reduce code
+
+b)Metastore: DerbyDB is used as a Metastore in which it is used to store the metainfo.
+
+c)Thrift: This is a daemon service in Hive which allows the connectivity of other services to connect to Hive through ODBC/JDBC connections.
+
+d)CLI: Through HUE we can connect to Hive and perform analytics using HUE.
+                                                      
+                                                     
+                                                     
