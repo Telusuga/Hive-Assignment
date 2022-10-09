@@ -127,3 +127,112 @@ NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL    NULL
 5       Kenny   25      Mumbai  6.52    NULL    NULL    NULL    NULL
 6       Hemanth 26      Delhi   7.12    6       2009-10-19      1943    654
 
+BUILD A DATA PIPELINE WITH HIVE
+
+The Data contains "," as a decimal point instead of "." so I had to manually change it in the csv itself.
+The first column is a date column and is in wrong format(dd/mm/yyyy) so I had to create a temp table(air_quality_initial) to take the data as string.
+
+hive> create table air_quality_inital(
+    > Date string,
+    > Time string,
+    > CO float,
+    > PT08_S1 int,
+    > NHHC int,
+    > C6H6 float,
+    > PT08_S2 int,
+    > NOx int,
+    > PT08_S3 int,
+    > NO2 int,
+    > PT08_S4 int,
+    > PT08_S5 int,
+    > T float,
+    > RH float,
+    > AH float
+    > )
+    > row format delimited
+    > fields terminated by '\;'
+    > tblproperties("skip.header.line.count"="1");
+OK
+Time taken: 4.965 seconds
+hive>
+
+Load the data from local to table
+hive> load data local inpath '/home/cloudera/kaggle_covid/AirQualityUCI.csv' into table air_quality_inital;
+Loading data to table my_first_hive_db.air_quality_inital
+Table my_first_hive_db.air_quality_inital stats: [numFiles=1, totalSize=785065]
+OK
+Time taken: 6.266 seconds
+hive>
+
+
+Now created Actual table(Air_Quality) with date column
+
+hive> create table Air_Quality(
+    > Date date,
+    > Time string,
+    > CO float,
+    > PT08_S1 int,
+    > NHHC int,
+    > C6H6 float,
+    > PT08_S2 int,
+    > NOx int,
+    > PT08_S3 int,
+    > NO2 int,
+    > PT08_S4 int,
+    > PT08_S5 int,
+    > T float,
+    > RH float,
+    > AH float
+    > );
+OK
+Time taken: 0.996 seconds
+hive>
+
+Now we need to load the data from temp table to actual table.
+
+hive> from air_quality_inital insert overwrite table Air_Quality select date(from_unixtime(unix_timestamp(Date,'dd/mm/yyyy'), 'yyyy-mm-dd')),
+    > Time,
+    > CO,
+    > PT08_S1,
+    > NHHC,
+    > C6H6,
+    > PT08_S2,
+    > NOx,
+    > PT08_S3,
+    > NO2,
+    > PT08_S4,
+    > PT08_S5,
+    > T,
+    > RH,
+    > AH;
+
+3. Perform a select operation . 
+
+hive> select * from Air_Quality limit 5;
+OK
+air_quality.date        air_quality.time        air_quality.co  air_quality.pt08_s1     air_quality.nhhc        air_quality.c6h6        air_quality.pt08_s2     air_quality.nox air_quality.pt08_s3     air_quality.no2 air_quality.pt08_s4 air_quality.pt08_s5      air_quality.t   air_quality.rh  air_quality.ah
+2004-03-10      18.00.00        2.6     1360    150     11.9    1046    166     1056    113     1692    1268    13.6    48.9    0.7578
+2004-03-10      19.00.00        2.0     1292    112     9.4     955     103     1174    92      1559    972     13.3    47.7    0.7255
+2004-03-10      20.00.00        2.2     1402    88      9.0     939     131     1140    114     1555    1074    11.9    54.0    0.7502
+2004-03-10      21.00.00        2.2     1376    80      9.2     948     172     1092    122     1584    1203    11.0    60.0    0.7867
+2004-03-10      22.00.00        1.6     1272    51      6.5     836     131     1205    116     1490    1110    11.2    59.6    0.7888
+
+
+4. Fetch the result of the select operation in your local as a csv file 
+
+hive> insert overwrite local directory '/home/cloudera/output' select date from Air_Quality limit 5;
+Copying data to local directory /home/cloudera/output
+MapReduce Jobs Launched:
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 7.13 sec   HDFS Read: 11598 HDFS Write: 55 SUCCESS
+Total MapReduce CPU Time Spent: 7 seconds 130 msec
+OK
+date
+Time taken: 393.492 seconds
+Output in Local:
+-rw-r--r-- 1 cloudera cloudera 55 Oct  9 11:36 000000_0
+[cloudera@quickstart output]$ cat 000000_0
+2004-03-10
+2004-03-10
+2004-03-10
+2004-03-10
+2004-03-10
