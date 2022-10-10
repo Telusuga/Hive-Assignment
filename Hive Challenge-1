@@ -236,3 +236,20 @@ Output in Local:
 2004-03-10
 2004-03-10
 2004-03-10
+
+
+5. Perform group by operation . 
+hive> select DATE from air_quality group by DATE limit 10;
+date
+NULL
+2004-03-10
+2004-03-11
+2004-03-12
+2004-03-13
+2004-03-14
+2004-03-15
+2004-03-16
+2004-03-17
+2004-03-18
+Time taken: 129.368 seconds, Fetched: 10 row(s)
+hive>
