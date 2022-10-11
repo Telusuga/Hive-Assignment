@@ -256,54 +256,17 @@ hive>
 
 
 7. Perform filter operation at least 5 kinds of filter examples . 
-
-hive> select * from Air_Quality where year(date)=2004 limit 5;
+hive> select nox from Air_Quality where time like '%1%' and year(date)=2004 and pt08_s1>1000 and c6h6 between 9 and 10 group by nox order by nox limit 5;
 OK
-air_quality.date        air_quality.time        air_quality.co  air_quality.pt08_s1     air_quality.nhhc        air_quality.c6h6        air_quality.pt08_s2     air_quality.nox air_quality.pt08_s3     air_quality.no2 air_quality.pt08_s4 air_quality.pt08_s5      air_quality.t   air_quality.rh  air_quality.ah
-2004-03-10      18.00.00        2.6     1360    150     11.9    1046    166     1056    113     1692    1268    13.6    48.9    0.7578
-2004-03-10      19.00.00        2.0     1292    112     9.4     955     103     1174    92      1559    972     13.3    47.7    0.7255
-2004-03-10      20.00.00        2.2     1402    88      9.0     939     131     1140    114     1555    1074    11.9    54.0    0.7502
-2004-03-10      21.00.00        2.2     1376    80      9.2     948     172     1092    122     1584    1203    11.0    60.0    0.7867
-2004-03-10      22.00.00        1.6     1272    51      6.5     836     131     1205    116     1490    1110    11.2    59.6    0.7888
-Time taken: 0.584 seconds, Fetched: 5 row(s)
-
-hive> select co as CO_LEVEL from Air_Quality where year(date)=2004 and c6h6>5 limit 5;
-OK
-co_level
-2.6
-2.0
-2.2
-2.2
-1.6
-Time taken: 0.257 seconds, Fetched: 5 row(s)
-
-
-hive> select c6h6 from Air_Quality where year(date)<=2005 group by c6h6 having count(*)>1 limit 5;
-OK
-c6h6
--200.0
-0.1
-0.2
-0.3
-0.4
-Time taken: 365.052 seconds, Fetched: 5 row(s)
-
-hive> select co from Air_Quality where year(date) between 2004 and 2005 limit 5;
-OK
-co
-2.6
-2.0
-2.2
-2.2
-1.6
-Time taken: 0.464 seconds, Fetched: 5 row(s)
+nox
+-200
+51
+54
+58
+59
+Time taken: 87.159 seconds, Fetched: 5 row(s)
 hive>
 
-hive> select max(co) as MAX_CO_LEVEL_IN_2004 from Air_Quality where year(date)=2004;
-OK
-max_co_level_in_2004
-11.9
-Time taken: 139.88 seconds, Fetched: 1 row(s)
 
 9. alter table operation
 hive> alter table air_quality_3 rename to air;
@@ -343,6 +306,19 @@ air_quality.date        air_quality.time        air_quality.co  air_quality.pt08
 2004-03-10      22.00.00        1.6     1272    51      6.5     836     131     1205    116     1490    1110    11.2    59.6    0.7888
 Time taken: 0.584 seconds, Fetched: 5 row(s)
 
+14 . sorting operation you have to perform .
+hive> select DATE from Air_Quality group by DATE sort by DATE limit 5;
+OK
+date
+NULL
+2004-03-10
+2004-03-11
+2004-03-12
+2004-03-13
+Time taken: 197.815 seconds, Fetched: 5 row(s)
+hive>
+
+
 15 . distinct operation you have to perform .
 hive> select distinct(c6h6) from Air_Quality limit 5;
 c6h6
@@ -352,4 +328,79 @@ NULL
 0.2
 0.3
 Time taken: 366.381 seconds, Fetched: 5 row(s)
+hive>
+
+16 . like an operation you have to perform .
+hive> select * from Air_Quality where time like '%1%' limit 5;
+OK
+air_quality.date        air_quality.time        air_quality.co  air_quality.pt08_s1     air_quality.nhhc        air_quality.c6h6        air_quality.pt08_s2     air_quality.nox air_quality.pt08_s3     air_quality.no2 air_quality.pt08_s4 air_quality.pt08_s5      air_quality.t   air_quality.rh  air_quality.ah
+2004-03-10      18.00.00        2.6     1360    150     11.9    1046    166     1056    113     1692    1268    13.6    48.9    0.7578
+2004-03-10      19.00.00        2.0     1292    112     9.4     955     103     1174    92      1559    972     13.3    47.7    0.7255
+2004-03-10      21.00.00        2.2     1376    80      9.2     948     172     1092    122     1584    1203    11.0    60.0    0.7867
+2004-03-11      01.00.00        1.0     1136    31      3.3     672     62      1453    76      1333    730     10.7    60.0    0.7702
+2004-03-11      10.00.00        1.7     1233    77      6.3     827     112     1218    98      1446    860     10.8    58.4    0.7552
+Time taken: 0.113 seconds, Fetched: 5 row(s)
+hive>
+
+17 . union operation you have to perform . 
+hive> select * from Air_Quality union all select * from air_quality_inital limit 5;
+10/03/2004      22.00.00        1.6     1272    51      6.5     836     131     1205    116     1490    1110    11.2    59.6    0.7888
+10/03/2004      21.00.00        2.2     1376    80      9.2     948     172     1092    122     1584    1203    11.0    60.0    0.7867
+10/03/2004      20.00.00        2.2     1402    88      9.0     939     131     1140    114     1555    1074    11.9    54.0    0.7502
+10/03/2004      19.00.00        2.0     1292    112     9.4     955     103     1174    92      1559    972     13.3    47.7    0.7255
+10/03/2004      18.00.00        2.6     1360    150     11.9    1046    166     1056    113     1692    1268    13.6    48.9    0.7578
+Time taken: 73.136 seconds, Fetched: 9476 row(s)
+hive>
+
+
+18 . table view operation you have to perform . 
+hive> create or replace view Air_Quality_view as select * from Air_Quality;
+OK
+date    time    co      pt08_s1 nhhc    c6h6    pt08_s2 nox     pt08_s3 no2     pt08_s4 pt08_s5 t       rh      ah
+Time taken: 12.45 seconds
+hive> describe formatted Air_Quality_view;
+OK
+col_name        data_type       comment
+# col_name              data_type               comment
+
+date                    date
+time                    string
+co                      float
+pt08_s1                 int
+nhhc                    int
+c6h6                    float
+pt08_s2                 int
+nox                     int
+pt08_s3                 int
+no2                     int
+pt08_s4                 int
+pt08_s5                 int
+t                       float
+rh                      float
+ah                      float
+
+# Detailed Table Information
+Database:               air_quality
+Owner:                  cloudera
+CreateTime:             Tue Oct 11 11:50:11 PDT 2022
+LastAccessTime:         UNKNOWN
+Protect Mode:           None
+Retention:              0
+Table Type:             VIRTUAL_VIEW
+Table Parameters:
+        transient_lastDdlTime   1665514211
+
+# Storage Information
+SerDe Library:          null
+InputFormat:            org.apache.hadoop.mapred.TextInputFormat
+OutputFormat:           org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+Compressed:             No
+Num Buckets:            -1
+Bucket Columns:         []
+Sort Columns:           []
+
+# View Information
+View Original Text:     select * from Air_Quality
+View Expanded Text:     select `air_quality`.`date`, `air_quality`.`time`, `air_quality`.`co`, `air_quality`.`pt08_s1`, `air_quality`.`nhhc`, `air_quality`.`c6h6`, `air_quality`.`pt08_s2`, `air_quality`.`nox`, `air_quality`.`pt08_s3`, `air_quality`.`no2`, `air_quality`.`pt08_s4`, `air_quality`.`pt08_s5`, `air_quality`.`t`, `air_quality`.`rh`, `air_quality`.`ah` from `air_quality`.`Air_Quality`
+Time taken: 0.537 seconds, Fetched: 41 row(s)
 hive>
