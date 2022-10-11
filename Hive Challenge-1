@@ -61,6 +61,12 @@ Answer:There might be 2 reasons for the failed execution.
 2nd:The schema might not be matched with the input data.
 3rd:The delimiters mentioned might be incorrect.
 
+Is it possible to add 100 nodes when we already have 100 nodes in Hive? If yes, how?
+
+Answer: Yes we can add the data nodes into an existing cluster by using Cloudera Manager.
+First we need to get the host IP Addresses of the data nodes and 
+we need to add the IP Addresses of these nodes into the cluster and after adding we need to assign the role of Data Node in the cluster.
+
 Hive Join operations
 
 Create a  table named CUSTOMERS(ID | NAME | AGE | ADDRESS   | SALARY)
