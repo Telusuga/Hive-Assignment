@@ -115,6 +115,8 @@ Answer:DDL-->CREATE,ALTER,DROP
 15.Explain about SORT BY, ORDER BY, DISTRIBUTE BY and CLUSTER BY in Hive.       
 Answer: SORT BY-->If there are many reducers then each reducer will do the sorting individually.
         ORDER BY-->The sorting will be happened overall on complete reducers.
+        DISTRIBUTE BY-->This will ensure the column values in which we mentioned the column will go to the same reducer.
+        Cluster BY-->The Clustering is a combination on DISTRIBUTE BY + SORT BY in which a particular column will be gone to a particular reducer and sorting will happen on the individual reducer.
        
 16.Difference between "Internal Table" and "External Table" and Mention when to choose “Internal Table” and “External Table” in Hive?
 Answer: The only difference between the Internal and external table is the place from which the data gets inserted into the hive table.
