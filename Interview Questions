@@ -32,6 +32,114 @@ b)Metastore: DerbyDB is used as a Metastore in which it is used to store the met
 c)Thrift: This is a daemon service in Hive which allows the connectivity of other services to connect to Hive through ODBC/JDBC connections.
 
 d)CLI: Through HUE we can connect to Hive and perform analytics using HUE.
-                                                      
+
+5. Mention what Hive query processor does? And Mention what are the components of a Hive query processor?
+Answer: The Hive Query Processor will convert the give HQL statement into Map Reduce job.
+Components of Hive Query Processor are:
+a)Parse and SemanticAnalysis: Here the syntax check will be taken place.
+b)Optimizer:It checks which plan will be cost efficenient to execute.
+c)Plan Components: The components for the generated plan will be created.
+d)Map/Reduce Execution Engine: Here the execution of hive job will take place.
+e)Sessions: The connection will be created for the particular Hive Job.
+f)Hive Function Framework: In this component the necessary hive functions will be generated as per the plan.
+g)Type interfaces
+h)Tools
+
+
+6. What are the three different modes in which we can operate Hive?
+Answer:There are 2 modes in Hive
+a)Local Mode: In this there is only a single data node
+b)Map-Reduce Mode: In this there are multiple data nodes.
+
+7. Features and Limitations of Hive.
+Answer:
+Features:
+a) Hive is schema on read.
+b) Hive is built on top of Map-Reduce.
+c) Hive uses HQL which is similar to SQL.
+
+Limitation:
+a)Hive does not support Real Time processing.
+b)High Latency.
+
+8. How to create a Database in HIVE?
+Answer:
+create database database_name;
+
+9. How to create a table in HIVE?
+Answer:
+create table table_name(
+column_names column_type
+)
+row format delimited
+fields terminated by 'column_delimiter';
+
+10.What do you mean by describe and describe extended and describe formatted with respect to database and table
+Answer:
+describe table-->shows the list of columns.
+describe database-->shows the name od database along with root location on hdfs.
+
+describe table extented-->It shows the metadata of the table.
+describe table formatted-->It shows the metadata in tabular format.
+
+11.How to skip header rows from a table in Hive?
+Answer: while creating the table we need to add the table property at last.
+Ex:tblproperty("skip.header.line.count"="1")
+
+12.What is a hive operator? What are the different types of hive operators?
+Answer:Hive Operator is used to perform mathematical operation on hive.
+Types of Hive Operators:
+a)Relational Operators
+b)Arithmetic Operators
+c)Logical Operators
+d)Complex Operators
+
+13.Explain about the Hive Built-In Functions
+Answer:The following are the hive built in functions which are mentioned below:
+a)upper(string)-->Returns the string in upper letters
+b)lower(string)-->Returns the string in lower letters
+c)trim(string)-->Returns the string after removing the spaces
+d)ltrim(string)-->Returns the string after removing the spaces on left
+d)rtrim(string)-->Returns the string after removing the spaces on right
+e)unixtime(column, the_column_format)-->Returns the unix time for the value of the column in the mentioned column format. Mostly used to convert the non-date format to date format.
+f)from_unixtime(unixtime, date_format)-->Returns the date in the mentioned date format from the unix timestamp.
+g)year(date)-->generates only the year from the date as output from complete date.
+h)month(date)-->generates only the month from the date as output from complete date.
+i)day(date)-->generates only the day from the date as output from complete date.
+j)concat(string 1, string 2)-->combines the both string and generates output based on string 1+string 2
+
+14. Write hive DDL and DML commands.
+Answer:DDL-->CREATE,ALTER,DROP
+       DML-->LOAD DATA,INSERT,IMPORT,EXPORT,DELETE,SELECT
+
+15.Explain about SORT BY, ORDER BY, DISTRIBUTE BY and CLUSTER BY in Hive.       
+Answer: SORT BY-->If there are many reducers then each reducer will do the sorting individually.
+        ORDER BY-->The sorting will be happened overall on complete reducers.
+       
+16.Difference between "Internal Table" and "External Table" and Mention when to choose “Internal Table” and “External Table” in Hive?
+Answer: The only difference between the Internal and external table is the place from which the data gets inserted into the hive table.
+For an internal table if the table gets removed then the data stored in hdfs will also be removed.
+But, for an external table if the table gets removed or dropped the data will not be removed as while craeting the table we will mention the data location.
+Reason to choose an external table is when any data is residing on the external source such as other databases. If any issue happens on the table the data will not get effected
+If the want to truncate external table it is not possible as data is not managed by Hive.
+For Internal table management of tables is done by Hive.
+
+17.Where does the data of a Hive table get stored?
+Answer:Default it will be stored in /user/hive/warehouse/table_name/ directory in HDFS for Internal Table. For external table we can store in anywhere in HDFS.
+
+18.Is it possible to change the default location of a managed table?
+Answer: Yes we can change it by mentioning LOCATION <hdfs path> at last while creating table.
                                                      
-                                                     
+19.What is a metastore in Hive? What is the default database provided by Apache Hive for metastore?                                                     
+Answer: Metastore will be storing all the metadata info regarding the tables in Hive.
+        The Default metastore for Apache Hive is DerbyDB.
+ 
+ 
+20.Why does Hive not store metadata information in HDFS?
+Answer:Because Hive already contains the Metadata DB which is Derby DB in which it is used to store all the metadata info.
+
+21.What is a partition in Hive? And Why do we perform partitioning in Hive?
+Answer:Partition means to divide the data based on a particular column or group of columns. Partition is one of the parameters inorder to increase the query performance in Hive.
+
+
+
