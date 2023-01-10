@@ -199,12 +199,52 @@ Answer:In Order By the output will be a single output but while using sort by th
 34.What is the usefulness of the DISTRIBUTED BY clause in Hive?
 Answer:Distributed By is used to when we mention the columns they will go to same reducer.
 
-38.Can a table be renamed in Hive?
-Answer:ALTER TABLE table_name RENAME TO new_table_name
-
 35.How does data transfer happen from HDFS to Hive?
 Answer:hadoop fs -put file_name <hadoop_path>
+
+36.Wherever (Different Directory) I run the hive query, it creates a new metastore_db, please explain the reason for it?
+Answer: So defaulty the property enabled is jdbc:derby:;databaseName=metastore_db;create=true so for every new directory it will be a new metastore_db and it is also known as embedded mode.
 
 37.What will happen in case you have not issued the command: ‘SET hive.enforce.bucketing=true;’ before bucketing a table in Hive?
 Answer:If it is not set then uneven number of files will be generated irrespective of number of reducers.
 If we set the property then number of reducers will be correct as per mentioned in cluster by during table creattion.
+
+38.Can a table be renamed in Hive?
+Answer:ALTER TABLE table_name RENAME TO new_table_name
+
+39.Write a query to insert a new column(new_col INT) into a hive table at a position before an existing column (x_col)
+Answer: ALTER TABLE CHANGE COLUMN new_col INT BEFORE x_col
+
+40.What is serde operation in HIVE?
+Answer: serde is used to to convert the input data into an another format mostly it is used for faster processing.
+The popular serde's are ORC, PARQUET, AVRO
+
+41.Explain how Hive Deserializes and serialises the data?
+Answer:First we will serialize the data based on the type of data present and if an data is already known like CSV, JSON then we will try to use the existing SERDE's.
+Whatever serde we used during serialization the same serde will be used at de-serialization.
+
+42.Write the name of the built-in serde in hive.
+Answer:CSVSerde,JSON Serde
+
+43.What is the need of custom Serde?
+Answer:If there is no Built in Serde which can do the serialization and de-serialization. In that scenario we need a built in Serde.
+
+44.Can you write the name of a complex data type(collection data types) in Hive?
+Answer:Map,Struct,Array
+
+46.What are the default record and field delimiter used for hive text files?
+Answer:The Default delimiter used is '|'
+
+47.How do you list all databases in Hive whose name starts with s?
+Answer:show databases;
+
+48.What is the difference between LIKE and RLIKE operators in Hive?
+Answer: LIKE is used for pattern matching same as in SQL
+RLIKE is used for sub-string matching in the mentioned column for which we need not to mention '%' at start.
+
+49.How to change the column data type in Hive?
+Answer:ALTER TABLE column_name new_column_datatype
+
+
+53.Write a query where you can overwrite data in a new table from the existing table
+Answer:insert overwrite table new_table_name select * from existing_table_name
