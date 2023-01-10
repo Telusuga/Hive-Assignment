@@ -174,10 +174,37 @@ Answer:Hcatalog is used to send the metadata of the tables in hive to other Hado
 
 30. Explain about the different types of join in Hive.
 Answer:There are 4 types of Join in Hive
-a)Reduce Side Join:
+a)Left Join:Only the records on the left table and the records which are matching with right table will be present.
+b)Right Join:Only the records on the right table and the records which are matching with left table will be present.
+c)Inner Join:Only the matching records in both left and right tables will be present.
+d)Full Outer Join:It is the combination of left join and right join.
+
+The type of joins in Map Reduce are 
+a)Reduce Side Join:When the data in the Map side is very small compared to the data in Reducer.
+b)Map Side Join: When the data in the Map Side is huge compared to the Reducer then the reducer complete data will be shared to each mapper task.
+c)Bucket Map Join: When the date is huge on both sides of Mapper and Reducer. Then, the buckets which contain the data will be moved to the reducer which contains the 
+                   range of hash value.
+d)Sorted Merge Bucket Map Join: It is an extension to Bucket Map Join in which the sorting is applied on both sides.
+
+31.Is it possible to create a Cartesian join between 2 tables, using Hive?
+Answer:Yes, it is possible to perform cartesian join or cross join in hive.
+
+32.Explain the SMB Join in Hive?
+Answer:Sorted Merge Bucket Join is an extension to Bucket Map Join in which the join there will be the use of Bucketing in which the data is separated based on the hash value generated.
+So, when the join is about to happen on the required Mapper and Reducer will be involved in the join based on the hash value range. If we sort the values in both the Mapper and Reducer then it will be SMB Join.
+
+33.What is the difference between order by and sort by which one we should use?
+Answer:In Order By the output will be a single output but while using sort by there will be outputs based on number of reducers.
+
+34.What is the usefulness of the DISTRIBUTED BY clause in Hive?
+Answer:Distributed By is used to when we mention the columns they will go to same reducer.
 
 38.Can a table be renamed in Hive?
 Answer:ALTER TABLE table_name RENAME TO new_table_name
 
+35.How does data transfer happen from HDFS to Hive?
+Answer:hadoop fs -put file_name <hadoop_path>
+
 37.What will happen in case you have not issued the command: ‘SET hive.enforce.bucketing=true;’ before bucketing a table in Hive?
-Answer:If it is not set then uneven number of files will be generated irrespective of number of reducers. If we set the property then number of reducers will be correct as per mentioned in cluster by during table creattion.
+Answer:If it is not set then uneven number of files will be generated irrespective of number of reducers.
+If we set the property then number of reducers will be correct as per mentioned in cluster by during table creattion.
