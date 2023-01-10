@@ -176,3 +176,8 @@ Answer:Hcatalog is used to send the metadata of the tables in hive to other Hado
 Answer:There are 4 types of Join in Hive
 a)Reduce Side Join:
 
+38.Can a table be renamed in Hive?
+Answer:ALTER TABLE table_name RENAME TO new_table_name
+
+37.What will happen in case you have not issued the command: ‘SET hive.enforce.bucketing=true;’ before bucketing a table in Hive?
+Answer:If it is not set then uneven number of files will be generated irrespective of number of reducers. If we set the property then number of reducers will be correct as per mentioned in cluster by during table creattion.
