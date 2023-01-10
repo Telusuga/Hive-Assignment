@@ -143,5 +143,36 @@ Answer:Because Hive already contains the Metadata DB which is Derby DB in which 
 21.What is a partition in Hive? And Why do we perform partitioning in Hive?
 Answer:Partition means to divide the data based on a particular column or group of columns. Partition is one of the parameters inorder to increase the query performance in Hive.
 
+22.What is the difference between dynamic partitioning and static partitioning?
+Answer: In Static partition we need to mention on which column value the data should be partitioned.
+But, in Dynamic partition only we should mention on column.
 
+23.How do you check if a particular partition exists?
+Answer: SHOW PARTITIONS table_name--> This will list out all the partitions for the table.
+        SHOW PARTITIONS table_name [PARTITION(column)]--> This will check whether a particular column is partitioned are not.
+        
+24.How can you stop a partition form being queried?
+Answer:ALTER TABLE table_name ENABLE OFFLINE
+
+25.Why do we need buckets? How Hive distributes the rows into buckets?
+Answer:Bucketing is similar to partitioning whereas in partitioning we will separate data based on repeated values but in bucketing we will separate data which is not repeating.
+Hive distributes the data into buckets based on some hash function for will the resultant output generated will be going to the bucket.
+
+26.In Hive, how can you enable buckets?
+Answer: set hive.enforce.bucketing=true
+
+27.How does bucketing help in the faster execution of queries?
+Answer:Bucketing is used to increase the query performance in which bucketing will store the data based on the hash value. So, if we try to fetch a value it will try to fetch for the hash value output for which it will not try to waste the execution time.
+
+28.How to optimise Hive Performance? Explain in very detail.
+Answer:We can optimize by using Partitioning and Bucketing.
+Partitioning-->It will try to separate the data based on the column which is repeated.
+Bucketing-->We should use bucketing on the column for which there is no repeatition of values.
+
+29. What is the use of Hcatalog?
+Answer:Hcatalog is used to send the metadata of the tables in hive to other Hadoop application such as Pig, MapReduce.
+
+30. Explain about the different types of join in Hive.
+Answer:There are 4 types of Join in Hive
+a)Reduce Side Join:
 
