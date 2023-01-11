@@ -245,6 +245,64 @@ RLIKE is used for sub-string matching in the mentioned column for which we need 
 49.How to change the column data type in Hive?
 Answer:ALTER TABLE column_name new_column_datatype
 
+50.How will you convert the string ’51.2’ to a float value in the particular column?
+Answer:select cast('51.2' as float) from table;
+
+51.What will be the result when you cast ‘abc’ (string) as INT?
+Answer:If we try to convert string to int we will get an error.
+
+52.What does the following query do?
+a. INSERT OVERWRITE TABLE employees-->insert the records from one table to another table.
+b. PARTITION (country, state)-->specifies the patition column
+c. SELECT ..., se.cnty, se.st-->selecting the columns to be inserted
+d. FROM staged_employees se;--> from which table
 
 53.Write a query where you can overwrite data in a new table from the existing table
 Answer:insert overwrite table new_table_name select * from existing_table_name
+
+54.What is the maximum size of a string data type supported by Hive? Explain how Hive supports binary formats
+Answer:Maximum size of string data type is 255. Hive supports binary format like BLOBs(Binary Large OBjects)
+
+55. What File Formats and Applications Does Hive Support?
+Answer:Text,ORC,Parquet,RC etc
+       Apllications-->Batch processing, large Volume data Analysis etc
+       
+57.How can Hive avoid mapreduce while processing the query?  
+Answer: set mapred.map.tasks = <value>
+
+59.Can the name of a view be the same as the name of a hive table?
+Answer:Yes we can use the same name as table.
+
+63.If you run a select * query in Hive, why doesn't it run MapReduce?
+Answer:Because there is no computation happening on query that is expected to run just we need to select the rows.
+
+65. What is the available mechanism for connecting applications when we run Hive as a server?
+Answer:We can use Hive ODBC connection to connect to Hive.
+
+68.What is UDF in Hive?
+Answer:UDF--User Defined Function is used to create specific functionaility functions which can perform data manipulation on the columns.
+
+69.Write a query to extract data from hdfs to hive
+Answer:For pushing data from hdfs location we need to use the query-->load data local inpath '<hdfs_path>' into table;
+
+70.What is TextInputFormat and SequenceFileInputFormat in hive.
+Answer: TextInputFormat-->JSON,CSV etc
+        SequenceFileInputFormat--> Array,Map etc
+        
+73.Can Hive process any type of data formats? Why? Explain in very detail
+Answer: Hive follows Schema on Read which means if we give a incorrect data to the table with respect to column data type it will not fail but show data will be shown as "NULL".
+
+74.Whenever we run a Hive query, a new metastore_db is created. Why?
+Answer:So defaulty the property enabled is jdbc:derby:;databaseName=metastore_db;create=true so for every new directory it will be a new metastore_db and it is also known as embedded mode.
+
+75.Can we change the data type of a column in a hive table? Write a complete query.
+Answer:ALTER TABLE column_name new_column_datatype
+
+76.While loading data into a hive table using the LOAD DATA clause, how do you specify it is a hdfs file and not a local file ?
+Answer: If we are loading data from hdfs-->load data local inpath '<hdfs_path>' into table;
+        If we are loading data from local--->load data inpath '<local_path>' into table;
+        
+83.Differentiate between local mode and MapReduce mode in Hive
+Answer:Local Mode has only one data node where as MapReduce Mode will have more than one data nodes
+
+
