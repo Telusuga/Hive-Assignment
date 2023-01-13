@@ -232,6 +232,9 @@ Answer:If there is no Built in Serde which can do the serialization and de-seria
 44.Can you write the name of a complex data type(collection data types) in Hive?
 Answer:Map,Struct,Array
 
+45.Can hive queries be executed from script files? How?
+Answer: source <script path>
+
 46.What are the default record and field delimiter used for hive text files?
 Answer:The Default delimiter used is '|'
 
@@ -266,15 +269,47 @@ Answer:Maximum size of string data type is 255. Hive supports binary format like
 55. What File Formats and Applications Does Hive Support?
 Answer:Text,ORC,Parquet,RC etc
        Apllications-->Batch processing, large Volume data Analysis etc
-       
+
+56.How do ORC format tables help Hive to enhance its performance?
+Answer:ORC does the data compression in regards to 75% of the actual data stored in which it results to faster reads and writes. 
+
 57.How can Hive avoid mapreduce while processing the query?  
 Answer: set mapred.map.tasks = <value>
+
+58.What is view and indexing in hive?
+Answer: View is a virtual table on top of the actual table which will be created by the DDL 
+CREATE VIEW <view_name>
+as
+{ columns }
+from 
+SOURCE_TABLE
+--> View will provide better security in terms of access to the actual data.
+
+Index: Index is know as pointer for faster access to the column data in the actual table.
+The index must be provided to the Hive by User.
+Any changes in the column will be resulted in the index as these indexes will be storing them.
 
 59.Can the name of a view be the same as the name of a hive table?
 Answer:Yes we can use the same name as table.
 
+60.What types of costs are associated in creating indexes on hive tables
+Answer:Whenever the data is huge it is better to have index built on the columns which have the below advantages
+       1)Faster access to data.
+       2)Faster execution in query.
+       
+61.Give the command to see the indexes on a table.
+Answer:SHOW INDEX FROM <table_name>
+
+62. Explain the process to access subdirectories recursively in Hive queries
+Answer:hive> Set mapred.input.dir.recursive=true;
+
+hive> Set hive.mapred.supports.subdirectories=true;
+
 63.If you run a select * query in Hive, why doesn't it run MapReduce?
 Answer:Because there is no computation happening on query that is expected to run just we need to select the rows.
+
+64.What are the uses of Hive Explode?
+Answer: The main use of Hive explode is used to flatten the Array records.
 
 65. What is the available mechanism for connecting applications when we run Hive as a server?
 Answer:We can use Hive ODBC connection to connect to Hive.
@@ -288,7 +323,24 @@ Answer:For pushing data from hdfs location we need to use the query-->load data 
 70.What is TextInputFormat and SequenceFileInputFormat in hive.
 Answer: TextInputFormat-->JSON,CSV etc
         SequenceFileInputFormat--> Array,Map etc
-        
+
+71.How can you prevent a large job from running for a long time in a hive?
+Answer: set hive.mapred.mode=strict
+
+72.When do we use explode in Hive?
+Answer: It manily used on Array datatype when we wanted to get the output of the array datatype in single row format.
+Use Case:[a,b,c],
+         [d,e,f]
+            |
+         explode
+            |  
+            a
+            b
+            c
+            d
+            e
+            f
+            
 73.Can Hive process any type of data formats? Why? Explain in very detail
 Answer: Hive follows Schema on Read which means if we give a incorrect data to the table with respect to column data type it will not fail but show data will be shown as "NULL".
 
@@ -302,6 +354,59 @@ Answer:ALTER TABLE column_name new_column_datatype
 Answer: If we are loading data from hdfs-->load data local inpath '<hdfs_path>' into table;
         If we are loading data from local--->load data inpath '<local_path>' into table;
         
+77.What is the precedence order in Hive configuration?
+Answer:Hive SET command has the highest priority
+       -hiveconf option from Hive Command Line
+       hive-site.xml file
+       hive-default.xml file
+       hadoop-site.xml file
+       hadoop-default.xml file
+
+78.Which interface is used for accessing the Hive metastore?    
+Answer:WebHCat is an interface which is used to connect to Hive Metastore through REST API. The requests are sent to metastore in the form of HTTP Requests.
+
+79.Is it possible to compress json in the Hive external table ?
+Answer:Yes, it is possible to load a compressed json into the hive external table.
+       Step1)Create a external table using JSON Serde.
+       Step2)set the following properties related to gzip to True
+              set mapred.output.compress=true;
+              set hive.exec.compress.output=true;
+              set mapred.output.compression.codec=org.apache.hadoop.io.compress.GzipCodec;
+              set io.compression.codecs=org.apache.hadoop.io.compress.GzipCodec;
+              
+
+80.What is the difference between local and remote metastores        
+Answer:Hive does have its own local metastore which is called Derby DB. There is a disadvantage for using Derby DB which is it can have a single session only but not more tahn one session.
+Remote Metastore does have a added advantage in which if any issue/error occured in HIVE it might get effected in the Metastore also which might result in loss of Metadata. But, if we use the remote metastore the issue might not occur.
+
+81.What is the purpose of archiving tables in Hive?    
+Answer: Archiving is mainly used to save the files generated from partitioning.
+In order to set the archiving to work then we need to set the following properties
+hive&gt set hive.archive.enabled=true;
+
+hive&gt set hive.archive.har.parentdir.settable=true;
+
+hive&gt set har.partfile.size=1099511627776;
+
+Once the properties are set now we can archive based on partition key
+Example-->alter table table_name ARCHIVE partition(<Mentioned Partition Value> like country='USA')
+
+In Order to unarchive the partition we should run the below command
+Example-->alter table table_name UNARCHIVE partition(<Mentioned Partition Value> like country='USA')
+
+There will be no output will be generated for the above 2 commands
+
+82.What is DBPROPERTY in Hive?        
+Answer:It is used when we are creating a Database in order to mention additional properties in the form of Key, Value pairs
+Ex: CREATE DATABASE IF NOT EXISTS test_db
+	COMMENT "Test Database created for tutorial"
+  LOCATION <Any path other than /user/hive/warehouse>
+	WITH DBPROPERTIES(
+		'Date' = '2014-12-03',
+		'Creator' = 'Bala G',
+		'Email' = 'bala@somewhere.com'
+		);
+    
 83.Differentiate between local mode and MapReduce mode in Hive
 Answer:Local Mode has only one data node where as MapReduce Mode will have more than one data nodes
 
